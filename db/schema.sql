@@ -1,0 +1,27 @@
+DROP DATABASE IF EXISTS work_db;
+CREATE DATABASE work_db;
+USE work_db;
+
+CREATE TABLE Department (
+    id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE roles (
+    id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(30) NOT NULL,
+    salary DECIMAL(10,2) NOT NULL,
+    department_id INTEGER NOT NULL,
+    FOREIGN KEY (department_id) REFERENCES Department(id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE Employee (
+    id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    first_name VARCHAR(30) NOT NULL,
+    last_name VARCHAR(30) NOT NULL,
+    role_id INTEGER NOT NULL,
+    manager_id INTEGER,
+    FOREIGN KEY (role_id) REFERENCES roles(id)
+    ON DELETE CASCADE
+);

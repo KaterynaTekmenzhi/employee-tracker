@@ -20,12 +20,43 @@ const selectOption = [
     }
 ];
 
-// add a department
-const addDepartment = [
+// add an employee 
+const addEmployee = [
     {
         type: 'input',
-        name: 'departmentName',
-        message: 'What is the name of the department?'
+        name: 'firstName',
+        message: 'What is the employee\'s first name?'
+    },
+    {
+        type: 'input',
+        name: 'lastName',
+        message: 'What is the employee\'s last name?'
+    },
+    {
+        type: 'list',
+        name: 'roleId',
+        message: 'What is the employee\'s role?',
+        choices: async () => {
+            try {
+                const results = await db.promise().query('SELECT title as name, id as value FROM roles');
+                return results[0];
+            } catch (err) {
+                throw err;
+            } 
+        } 
+    },
+    {
+        type: 'list',
+        name: 'managerId',
+        message: 'Who is the employee\'s manager?',
+        choices: async () => {
+            try {
+                const results = await db.promise().query('SELECT CONCAT(first_name, " ", last_name) as name, id as value FROM employees');
+                return results[0];
+            } catch (err) {
+                throw err;
+            } 
+        }
     }
 ];
 
@@ -47,8 +78,46 @@ const addRole = [
         message: 'What department does the role belong to?',
         choices: async () => {
             try {
-                const departmentRole = await db.promise().query('SELECT * FROM department');
-                return departmentRole.map(department => department.name);
+                const results = await db.promise().query('SELECT name as name, id as value FROM departments');
+                return results[0];
+            } catch (err) { 
+                throw err;
+            }
+        }
+    }
+];
+
+// add a department
+const addDepartment = [
+    {
+        type: 'input',
+        name: 'departmentName',
+        message: 'What is the name of the department?'
+    }
+];
+
+const updateEmployeeRole = [
+    {
+        type: 'list',
+        name: 'employeeId',
+        message: 'Which employee would you like to update?',
+        choices: async () => {
+            try {
+                const results = await db.promise().query('SELECT CONCAT(first_name, " ", last_name) as name, id as value FROM employees');
+                return results[0];
+            } catch (err) {
+                throw err;
+            }
+        }
+    },
+    {
+        type: 'list',
+        name: 'roleId',
+        message: 'What is the employee\'s new role?',
+        choices: async () => {
+            try {
+                const results = await db.promise().query('SELECT title as name, id as value FROM roles');
+                return results[0];
             } catch (err) {
                 console.log(err);
             }
@@ -56,5 +125,7 @@ const addRole = [
     }
 ];
 
-module.exports = {selectOption, addDepartment, addRole};
+
+
+module.exports = {selectOption, addEmployee, addRole, addDepartment, updateEmployeeRole};
 

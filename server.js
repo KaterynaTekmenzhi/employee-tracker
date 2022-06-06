@@ -1,13 +1,13 @@
 // globals for the server
 const inquirer = require('inquirer');
-require('console.table');
 const db = require('./config/connection');
+require('console.table');
 
 // import questions from utils/questions.js
-const { selectOption } = require('./utils/questions');
+const { selectOption, addEmployee, addRole, addDepartment, updateEmployeeRole } = require('./utils/questions');
 
 // connect to the database
-db.connect(err => {
+db.connect((err) => {
     if (err) throw err;
     console.log('Connected to the database');
     start();
@@ -29,7 +29,7 @@ const start = () => {
                 viewRoles();
                 break;
             case 'Add an employee':
-                addEmployee();
+                employeeData();
                 break;
             case 'Add a department':
                 addDepartment();
@@ -49,31 +49,35 @@ const start = () => {
 }
 
 // function to view all tables
+// function to view all employees
 const viewEmployees = () => {
-    db.promise().query('SELECT * FROM employee').then(employees => {
-        console.table(employees);
+    console.log('Viewing all employees');
+    db.query('SELECT * FROM employees', (err, res) => {
+        if (err) throw err;
+        console.table(res);
         start();
-    }).catch(err => {
-        console.log(err);
-    }); 
+    })
 };
+
+// function to view all departments
 const viewDepartments = () => {
-    db.promise().query('SELECT * FROM department').then(departments => {
-        console.table(departments);
+    db.query('SELECT * FROM departments', (err, res) => {
+        if (err) throw err;
+        console.table(res);
         start();
-    }).catch(err => {
-        console.log(err);
-    }
-    );
-}
+    })
+};
+
+// function to view all roles
 const viewRoles = () => {
-    db.promise().query('SELECT * FROM role').then(roles => {
-        console.table(roles);
+    db.query('SELECT * FROM roles', (err, res) => {
+        if (err) throw err;
+        console.table(res);
         start();
     }
     ).catch(err => {
         console.log(err);
-    }  // end of viewRoles
+    }
     );
 }
 
@@ -83,9 +87,18 @@ const viewRoles = () => {
 //         .then((answers) => {
 //             db.query('INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)', answers, (err, res) => {
 
-// const addEmployee = () => {
-//     inquirer.prompt(addEmployee)
-//         .then((answers) => {
-//             db.query('INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)', [answers.first_name, answers], (err, res) => {
+const employeeData = () => {
+    inquirer.prompt(addEmployee)
+    .then((answers) => {
+        db.query('INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)', [answers.firstName, answers.lastName, answers.roleId, answers.managerId], (err, res) => {
+            if (err) {
+                console.log(err);
+            }
+            console.log(`${answers.firstName} ${answers.lastName} was added to the database`);
+            start();
+        }) 
+    });
+};
+
 
 

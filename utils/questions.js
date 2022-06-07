@@ -38,7 +38,7 @@ const addEmployee = [
         message: 'What is the employee\'s role?',
         choices: async () => {
             try {
-                const results = await db.promise().query('SELECT title as name, id as value FROM roles');
+                const results = await db.promise().query('SELECT title as departments_name, id as value FROM roles');
                 return results[0];
             } catch (err) {
                 throw err;
@@ -78,7 +78,7 @@ const addRole = [
         message: 'What department does the role belong to?',
         choices: async () => {
             try {
-                const results = await db.promise().query('SELECT name as name, id as value FROM departments');
+                const results = await db.promise().query('SELECT departments_name as name, id as value FROM departments');
                 return results[0];
             } catch (err) { 
                 throw err;

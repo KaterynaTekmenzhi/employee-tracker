@@ -32,13 +32,13 @@ const start = () => {
                 employeeData();
                 break;
             case 'Add a department':
-                addDepartment();
+                departmentData();
                 break;
             case 'Add a role':
-                addRole();
+                roleData();
                 break;
             case 'Update an employee role':
-                updateEmployeeRole();
+                updateEmployeeRoleData();
                 break;
             case 'Exit':
                 db.end();
@@ -46,7 +46,7 @@ const start = () => {
         }
     }
     );
-}
+};
 
 // function to view all tables
 // function to view all employees
@@ -74,19 +74,10 @@ const viewRoles = () => {
         if (err) throw err;
         console.table(res);
         start();
-    }
-    ).catch(err => {
-        console.log(err);
-    }
-    );
-}
+    })
+};
 
 // function to add an employee
-// const addEmployee = () => {
-//     inquirer.prompt([addEmployee)
-//         .then((answers) => {
-//             db.query('INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)', answers, (err, res) => {
-
 const employeeData = () => {
     inquirer.prompt(addEmployee)
     .then((answers) => {
@@ -99,6 +90,49 @@ const employeeData = () => {
         }) 
     });
 };
+
+// function to add a department
+const departmentData = () => {
+    inquirer.prompt(addDepartment)
+    .then((answers) => {
+        db.query('INSERT INTO departments (departments_name) VALUES (?)', [answers.departmentName], (err, res) => {
+            if (err) {
+                console.log(err);
+            }
+            console.log(`${answers.departmentName} was added to the database`);
+            start();
+        }) 
+    });
+};
+
+// function to add a role
+const roleData = () => {
+    inquirer.prompt(addRole)
+    .then((answers) => {
+        db.query('INSERT INTO roles (title, salary, departments_id) VALUES (?,?,?)', [answers.roleTitle, answers.roleSalary, answers.roleDepartment], (err, res) => {
+            if (err) {
+                console.log(err);
+            }
+            console.log(`${answers.roleTitle} was added to the database`);
+            start();
+        }) 
+    });
+}
+
+// function to update an employee role
+const updateEmployeeRoleData = () => {
+    inquirer.prompt(updateEmployeeRole)
+    .then((answers) => {
+        db.query('UPDATE employees SET role_id = ? WHERE id = ?', [answers.roleId, answers.employeeId], (err, res) => {
+            if (err) {
+                console.log(err);
+            }
+            console.log(`${answers.employeeId}'s role was updated to ${answers.roleId}`);
+            start();
+        })
+    });
+};
+
 
 
 

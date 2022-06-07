@@ -1,7 +1,7 @@
 // globals for the server
 const inquirer = require('inquirer');
 const db = require('./config/connection');
-require('console.table');
+const cTable = require('console.table');
 
 // import questions from utils/questions.js
 const { selectOption, addEmployee, addRole, addDepartment, updateEmployeeRole } = require('./utils/questions');
